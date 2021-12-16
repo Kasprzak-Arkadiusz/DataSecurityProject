@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  ui:
+    container_name: webapp_container
+    image: ${DOCKER_REGISTRY-}ui
+    build:
+      context: .
+      dockerfile: UI/Dockerfile
+    ports:
+      - "5000:443"
+    depends_on:
+      - api
+  api:
+    container_name: api_container
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    ports:
+      - "5001:443"
