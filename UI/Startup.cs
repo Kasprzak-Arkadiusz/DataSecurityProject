@@ -1,15 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using UI.Utils;
 
 namespace UI
@@ -31,8 +26,9 @@ namespace UI
             services.AddHttpClient("Default")
                 .ConfigurePrimaryHttpMessageHandler(() =>
                 {
-                    //TODO extract fileName and password to userSecrets
-                    var certificate = new X509Certificate2("/https/aspnetapp.pfx", "hard-password");
+                    var certificate = new X509Certificate2(
+                        Configuration["Certificate:FileLocation"],
+                        Configuration["Certificate:Password"]);
                     var certificateValidator = new SingleCertificateValidator(certificate);
 
                     return new HttpClientHandler
