@@ -1,11 +1,9 @@
+using Application.Persistence;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace API
 {
@@ -13,7 +11,20 @@ namespace API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                ApplyMigrations(context);
+            }
+
+            host.Run();
+        }
+        private static void ApplyMigrations(ApplicationDbContext context) {
+            if (context.Database.GetPendingMigrations().Any()) {
+                context.Database.Migrate();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

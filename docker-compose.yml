@@ -19,3 +19,11 @@ services:
       dockerfile: API/Dockerfile
     ports:
       - "5001:443"
+    depends_on:
+      - db
+  db:
+    container_name: db_container
+    image:  "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1

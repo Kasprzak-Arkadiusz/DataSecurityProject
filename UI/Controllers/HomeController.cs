@@ -29,9 +29,11 @@ namespace UI.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
-            return View();
+            var client = _httpClientFactory.CreateClient("Default");
+            var response = await client.GetAsync("https://api/Users");
+            return View(response);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
