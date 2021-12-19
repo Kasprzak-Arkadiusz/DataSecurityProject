@@ -21,7 +21,10 @@ namespace API
 
             host.Run();
         }
-        private static void ApplyMigrations(ApplicationDbContext context) {
+        private static void ApplyMigrations(ApplicationDbContext context)
+        {
+            var test = context.Database.GetPendingMigrations();
+
             if (context.Database.GetPendingMigrations().Any()) {
                 context.Database.Migrate();
             }

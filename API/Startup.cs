@@ -29,17 +29,6 @@ namespace API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    sqlOptions =>
-                    {
-                        sqlOptions.EnableRetryOnFailure(
-                            maxRetryCount: 4,
-                            maxRetryDelay: TimeSpan.FromSeconds(1),
-                            errorNumbersToAdd: new int[] { });
-                    }
-                ));
-
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             services.AddApplication(Configuration);

@@ -41,7 +41,7 @@ namespace Application.Authentication
 
         public string HashPassword(string password)
         {
-            if (password is null)
+            if (string.IsNullOrEmpty(password))
             {
                 throw new ArgumentNullException(nameof(password));
             }
@@ -59,12 +59,12 @@ namespace Application.Authentication
 
         public bool VerifyHashedPassword(User user, string hashedPassword, string providedPassword)
         {
-            if (hashedPassword == null)
+            if (string.IsNullOrEmpty(hashedPassword))
             {
                 throw new ArgumentNullException(nameof(hashedPassword));
             }
 
-            if (providedPassword == null)
+            if (string.IsNullOrEmpty(providedPassword))
             {
                 throw new ArgumentNullException(nameof(providedPassword));
             }

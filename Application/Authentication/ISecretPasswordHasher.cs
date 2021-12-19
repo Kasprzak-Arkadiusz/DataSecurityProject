@@ -2,7 +2,7 @@
 {
     public interface ISecretPasswordHasher
     {
-        public string EncryptPassword(string password);
-        public string DecryptPassword(string password);
+        public (byte[] encryptedPassword, byte[] iv) EncryptPassword(string password);
+        public string DecryptPassword(byte[] encryptedPassword, byte[] iv);
     }
 }

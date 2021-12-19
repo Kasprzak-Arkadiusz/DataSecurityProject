@@ -1,4 +1,6 @@
-﻿using Application.Repositories;
+﻿using Application.Authentication;
+using Application.Entities;
+using Application.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -27,6 +29,14 @@ namespace API.Controllers
                 return NotFound("User could not be found");
 
             return Ok(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] User user)
+        {
+            await _userRepository.CreateUserAsync(user);
+
+            return Ok();
         }
     }
 }

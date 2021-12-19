@@ -1,4 +1,5 @@
 ﻿using System;
+using Application.Authentication;
 using Application.Persistence;
 using Application.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ namespace Application
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<ISecretPasswordHasher, SecretPasswordHasher>();
 
             return services;
         }
