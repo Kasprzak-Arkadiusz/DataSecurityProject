@@ -1,5 +1,6 @@
 ﻿using System;
 using Application.Persistence;
+using Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace Application
                 ));
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

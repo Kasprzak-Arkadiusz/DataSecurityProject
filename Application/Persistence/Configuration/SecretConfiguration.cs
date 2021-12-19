@@ -10,6 +10,7 @@ namespace Application.Persistence.Configuration
         {
             builder.Property(s => s.ServiceName).HasMaxLength(50).IsRequired();
             builder.Property(s => s.Password).HasMaxLength(128).IsRequired();
+            builder.Property(s => s.Iv).HasMaxLength(128).IsRequired();
         }
     }
 }
