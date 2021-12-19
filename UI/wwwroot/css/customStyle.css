@@ -1,0 +1,7 @@
+﻿form, label, input, span, h3, h4 {
+    text-align: center;
+}
+
+#registerForm {
+    max-width: 360px;
+}

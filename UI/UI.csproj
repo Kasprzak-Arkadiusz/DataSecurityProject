@@ -14,4 +14,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Login\" />
+    <Folder Include="Views\Logout\" />
+    <Folder Include="Views\Secrets\" />
+  </ItemGroup>
+
 </Project>
