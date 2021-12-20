@@ -39,7 +39,7 @@ namespace Application.Authentication
             return areSame;
         }
 
-        public string HashPassword(string password)
+        public byte[] HashPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
             {
@@ -54,12 +54,12 @@ namespace Application.Authentication
             Buffer.BlockCopy(salt, 0, outputBytes, 0, SaltSize);
             Buffer.BlockCopy(subkey, 0, outputBytes, SaltSize, Pbkdf2SubkeyLength);
 
-            return Convert.ToBase64String(outputBytes);
+            return outputBytes;
         }
 
-        public bool VerifyHashedPassword(User user, string hashedPassword, string providedPassword)
+        public bool VerifyHashedPassword(User user, byte[] hashedPassword, string providedPassword)
         {
-            if (string.IsNullOrEmpty(hashedPassword))
+            if (hashedPassword is null || hashedPassword.Length == 0)
             {
                 throw new ArgumentNullException(nameof(hashedPassword));
             }
@@ -69,14 +69,7 @@ namespace Application.Authentication
                 throw new ArgumentNullException(nameof(providedPassword));
             }
 
-            var decodedHashedPassword = Convert.FromBase64String(hashedPassword);
-
-            if (decodedHashedPassword.Length == 0)
-            {
-                return false;
-            }
-
-            return VerifyHashedPasswordV2(decodedHashedPassword, providedPassword);
+            return VerifyHashedPasswordV2(hashedPassword, providedPassword);
         }
 
         private static bool VerifyHashedPasswordV2(byte[] hashedPassword, string password)

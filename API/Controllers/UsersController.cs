@@ -1,5 +1,4 @@
-﻿using Application.Authentication;
-using Application.Entities;
+﻿using Application.Entities;
 using Application.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : Controller
+    public class UsersController : BaseApiController
     {
         private readonly IUserRepository _userRepository;
 
