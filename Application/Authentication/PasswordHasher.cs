@@ -1,5 +1,4 @@
-﻿using Application.Entities;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -57,7 +56,7 @@ namespace Application.Authentication
             return outputBytes;
         }
 
-        public bool VerifyHashedPassword(User user, byte[] hashedPassword, string providedPassword)
+        public bool VerifyHashedPassword(byte[] hashedPassword, string providedPassword)
         {
             if (hashedPassword is null || hashedPassword.Length == 0)
             {
@@ -69,10 +68,10 @@ namespace Application.Authentication
                 throw new ArgumentNullException(nameof(providedPassword));
             }
 
-            return VerifyHashedPasswordV2(hashedPassword, providedPassword);
+            return VerifyHashedPasswordPrivate(hashedPassword, providedPassword);
         }
 
-        private static bool VerifyHashedPasswordV2(byte[] hashedPassword, string password)
+        private static bool VerifyHashedPasswordPrivate(byte[] hashedPassword, string password)
         {
             if (hashedPassword.Length != SaltSize + Pbkdf2SubkeyLength)
             {

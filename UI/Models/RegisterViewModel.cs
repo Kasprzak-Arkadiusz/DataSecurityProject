@@ -42,5 +42,7 @@ namespace UI.Models
         [DataType(DataType.Password)]
         [Compare(nameof(MasterPassword), ErrorMessage = "The master password and master confirmation password do not match.")]
         public string ConfirmMasterPassword { get; set; }
+
+        public string Error { get; set; }
     }
 }

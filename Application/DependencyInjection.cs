@@ -24,9 +24,13 @@ namespace Application
                 ));
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
             services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ISecretPasswordHasher, SecretPasswordHasher>();
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

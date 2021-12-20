@@ -5,6 +5,6 @@ namespace Application.Authentication
     public interface IPasswordHasher
     {
         public byte[] HashPassword(string password);
-        public bool VerifyHashedPassword(User user, byte[] hashedPassword, string providedPassword);
+        public bool VerifyHashedPassword(byte[] hashedPassword, string providedPassword);
     }
 }

@@ -7,6 +7,10 @@ namespace Application.Repositories
     {
         public Task<User> GetUserByIdAsync(int id);
 
+        public Task<User> GetUserByNameAsync(string username);
+
+        public Task<User> GetUserByEmailAsync(string email);
+
         public Task CreateUserAsync(User user);
 
         public Task UpdateUserAsync(User user);

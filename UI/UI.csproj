@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Login\" />
     <Folder Include="Views\Logout\" />
     <Folder Include="Views\Secrets\" />
   </ItemGroup>

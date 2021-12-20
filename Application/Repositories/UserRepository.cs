@@ -1,5 +1,8 @@
-﻿using Application.Entities;
+﻿using System;
+using System.Linq;
+using Application.Entities;
 using Application.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Application.Repositories
@@ -16,6 +19,18 @@ namespace Application.Repositories
         public async Task<User> GetUserByIdAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
+            return user;
+        }
+
+        public async Task<User> GetUserByNameAsync(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            return user;
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
 

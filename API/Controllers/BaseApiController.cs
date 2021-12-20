@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public abstract class BaseApiController : ControllerBase
     {
-        // Here will be added all services
+        // All services will be added here
+        private IAuthenticationService _authenticationService;
+
+        protected IAuthenticationService AuthenticationService =>
+            _authenticationService ??= HttpContext.RequestServices.GetService<IAuthenticationService>();
     }
 }

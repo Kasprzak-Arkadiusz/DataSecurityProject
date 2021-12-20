@@ -14,5 +14,16 @@ namespace Application.Entities
         public LoginFailure LoginFailure { get; set; }
         public ICollection<LastConnection> LastConnections { get; set; }
         public ICollection<Secret> Secrets { get; set; }
+
+        public User()
+        { }
+
+        public User(string userName, string email, byte[] password, byte[] masterPassword)
+        {
+            UserName = userName;
+            Email = email;
+            Password = password;
+            MasterPassword = masterPassword;
+        }
     }
 }

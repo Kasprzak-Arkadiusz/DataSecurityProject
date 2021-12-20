@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
+using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using UI.Utils;
@@ -23,7 +25,16 @@ namespace UI
         {
             services.AddControllersWithViews();
 
-            services.AddHttpClient("Default")
+            var test = Configuration.GetValue<string>("ApiUrl");
+
+            services.AddHttpClient("api", c =>
+                {
+                    c.BaseAddress = new Uri(Configuration.GetValue<string>("ApiUrl"));
+                    c.DefaultRequestHeaders.Add(
+                        HeaderNames.Accept, "*/*");
+                    c.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+                    c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
+                })
                 .ConfigurePrimaryHttpMessageHandler(() =>
                 {
                     var certificate = new X509Certificate2(
