@@ -10,7 +10,7 @@ namespace API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody] UserDto userDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDto userDto)
         {
             var result = await AuthenticationService.RegisterAsync(userDto);
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Application.Entities;
+﻿using Application.Entities;
 using Application.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -24,7 +22,8 @@ namespace Application.Repositories
 
         public async Task<User> GetUserByNameAsync(string username)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            var user = await _context.Users.Include(u => u.LoginFailure)
+                .FirstOrDefaultAsync(u => u.UserName == username);
             return user;
         }
 

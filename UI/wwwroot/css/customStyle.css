@@ -2,6 +2,11 @@
     text-align: center;
 }
 
-#registerForm {
+#registerForm, #loginForm {
     max-width: 360px;
+    text-align: center;
+}
+
+div.alert-danger {
+    text-align: center;
 }

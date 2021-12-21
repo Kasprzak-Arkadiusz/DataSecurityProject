@@ -24,6 +24,12 @@ namespace Application.Entities
             Email = email;
             Password = password;
             MasterPassword = masterPassword;
+            LoginFailure = new LoginFailure();
+        }
+
+        public bool IsLockedOut()
+        {
+            return LoginFailure is not null && LoginFailure.IsLockedOut();
         }
     }
 }
