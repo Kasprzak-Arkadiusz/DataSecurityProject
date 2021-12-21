@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using UI.Utils;
 
 namespace UI.Models
 {
@@ -33,6 +34,7 @@ namespace UI.Models
         [Required]
         [DataType(DataType.Password)]
         [DisplayName("Master password")]
+        [NotEqual(nameof(Password), nameof(Password))]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
             ErrorMessage = "The master password must be at least 8 character long, contain one number and one upper case character")]
         public string MasterPassword { get; set; }

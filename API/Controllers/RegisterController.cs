@@ -16,7 +16,6 @@ namespace API.Controllers
 
             if (!result.Succeeded)
             {
-                // Here would be normally logging with message received from result
                 return BadRequest("Invalid attempt. Try again.");
             }
 
