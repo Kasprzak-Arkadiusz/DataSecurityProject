@@ -1,10 +1,16 @@
-﻿using Application.Entities;
+﻿using Application.Common;
+using Application.Common.Dto;
+using Application.Entities;
 using Application.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using Application.Common;
-using Application.Common.Dto;
 
 namespace Application.Authentication
 {
@@ -13,6 +19,7 @@ namespace Application.Authentication
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUserRepository _userRepository;
         private readonly ILoginFailureRepository _loginFailureRepository;
+        private readonly IConfiguration _configuration;
 
         public AuthenticationService(IPasswordHasher passwordHasher,
             IUserRepository userRepository,
@@ -21,16 +28,19 @@ namespace Application.Authentication
             _passwordHasher = passwordHasher;
             _userRepository = userRepository;
             _loginFailureRepository = loginFailureRepository;
+            _configuration = new ConfigurationBuilder()
+                .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .Build();
         }
 
         public async Task<Result> RegisterAsync(RegisterDto userDto)
         {
             if (await _userRepository.GetUserByNameAsync(userDto.UserName) is not null)
-                return Result.Failure(new List<string> {"A user with provided user name address already exists."});
+                return Result.Failure(new List<string> { "A user with provided user name address already exists." });
 
             if (await _userRepository.GetUserByEmailAsync(userDto.Email) is not null)
-                return Result.Failure(new List<string> {"A user with provided email address already exists."});
-            
+                return Result.Failure(new List<string> { "A user with provided email address already exists." });
+
             var hashedPassword = _passwordHasher.HashPassword(userDto.Password);
             var hashedMasterPassword = _passwordHasher.HashPassword(userDto.MasterPassword);
 
@@ -40,9 +50,9 @@ namespace Application.Authentication
             return Result.Success();
         }
 
-        public async Task<Result> LoginAsync(LoginDto loginDto)
+        public async Task<LoginResponse> LoginAsync(LoginDto loginDto)
         {
-            var failureResponse = new[] {"Invalid attempt"};
+            var failureResponse = new[] { "Invalid attempt" };
 
             var providedUserName = loginDto.UserName;
             var providedPassword = loginDto.Password;
@@ -50,17 +60,22 @@ namespace Application.Authentication
             var user = await _userRepository.GetUserByNameAsync(providedUserName);
 
             if (user is null)
-                return Result.Failure(failureResponse);
+                return new LoginResponse(Result.Failure(failureResponse));
 
             if (user.IsLockedOut())
-                return Result.Failure(new[] {"This account is currently locked out."});
+                return new LoginResponse(Result.Failure(new[] { "This account is currently locked out." }));
 
-            if(!await TryLoginAsync(user, providedPassword))
-                return Result.Failure(failureResponse);
+            if (!await TryLoginAsync(user, providedPassword))
+                return new LoginResponse(Result.Failure(failureResponse));
 
-            //TODO Generate JWT Token 
-            
-            return Result.Success();
+            var token = GenerateJwtToken(user);
+
+            var response = new LoginResponse(Result.Success())
+            {
+                Token = token
+            };
+
+            return response;
         }
 
         private async Task<bool> TryLoginAsync(User user, string providedPassword)
@@ -79,6 +94,21 @@ namespace Application.Authentication
             loginFailure.SuccessfulAttempt();
 
             return true;
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["JWT:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddMinutes(Constants.JwtExpirationTimeInMinutes),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         public void Logout(string userName)

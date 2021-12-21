@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using UI.Models;
+using UI.Utils;
 
 namespace UI.Controllers
 {
@@ -29,13 +32,15 @@ namespace UI.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PostAsync(actionPath, content);
 
-            // Temporary solution
+            var result = await httpResponseMessage.Content.ReadFromJsonAsync<LoginResponse>();
+            
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                return View();
+                HttpContext.Session.SetString("Token", result?.Token);
+                return RedirectToAction("Index", "Home");
             }
 
-            loginViewModel.Error = await httpResponseMessage.Content.ReadAsStringAsync();
+            loginViewModel.Error = result?.Result.Errors[0];
 
             return View(loginViewModel);
         }

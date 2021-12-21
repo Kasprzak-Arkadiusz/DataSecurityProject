@@ -7,7 +7,7 @@ namespace Application.Authentication
     public interface IAuthenticationService
     {
         public Task<Result> RegisterAsync(RegisterDto user);
-        public Task<Result> LoginAsync(LoginDto login);
+        public Task<LoginResponse> LoginAsync(LoginDto login);
         public void Logout(string userName);
     }
 }

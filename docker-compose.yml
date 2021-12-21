@@ -23,10 +23,12 @@ services:
       - db
   db:
     container_name: db_container
-    image:  "mcr.microsoft.com/mssql/server:2019-latest"
+    image:  "mcr.microsoft.com/mssql/server"
     hostname: sql-server
     ports:
       - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=1Secure*Password1
+    volumes:
+      - /var/lib/docker/volumes/mssql_db/_data:/var/opt/data
