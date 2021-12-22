@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using UI.Models;
 using UI.Utils;
 
@@ -33,10 +38,29 @@ namespace UI.Controllers
             var httpResponseMessage = await client.PostAsync(actionPath, content);
 
             var result = await httpResponseMessage.Content.ReadFromJsonAsync<LoginResponse>();
-            
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 HttpContext.Session.SetString("Token", result?.Token);
+
+                var claims = result?.Claims.Select(c => new Claim(c.Type, c.Value)).ToList();
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    AllowRefresh = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+                    IsPersistent = false,
+                    IssuedUtc = DateTimeOffset.Now
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
                 return RedirectToAction("Index", "Home");
             }
 

@@ -1,18 +1,12 @@
-﻿namespace Application.Common
+﻿using Application.Common.Dto;
+using System.Collections.Generic;
+
+namespace Application.Common
 {
     public class LoginResponse
     {
-        public Result Result { get; set; }
         public string Token { get; set; }
-
-        public LoginResponse(Result result)
-        {
-            Result = result;
-        }
-
-        public LoginResponse()
-        {
-            
-        }
+        public List<ClaimDto> Claims { get; set; }
+        public Result Result { get; set; }
     }
 }

@@ -54,19 +54,21 @@ namespace Application.Authentication
             var user = await _userRepository.GetUserByNameAsync(providedUserName);
 
             if (user is null)
-                return new LoginResponse(Result.Failure(failureResponse));
+                return new LoginResponse { Result = Result.Failure(failureResponse) };
 
             if (user.IsLockedOut())
-                return new LoginResponse(Result.Failure(new[] { "This account is currently locked out." }));
+                return new LoginResponse { Result = Result.Failure(new[] { "This account is currently locked out. Try again later." }) };
 
             if (!await TryLoginAsync(user, providedPassword))
-                return new LoginResponse(Result.Failure(failureResponse));
+                return new LoginResponse { Result = Result.Failure(failureResponse) };
 
             var token = GenerateJwtToken(user, jwtKey);
 
-            var response = new LoginResponse(Result.Success())
+            var response = new LoginResponse()
             {
-                Token = token
+                Token = token,
+                Claims = GenerateClaims(user),
+                Result = Result.Success()
             };
 
             return response;
@@ -90,7 +92,7 @@ namespace Application.Authentication
             return true;
         }
 
-        private string GenerateJwtToken(User user, string jwtKey)
+        private static string GenerateJwtToken(User user, string jwtKey)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(jwtKey);
@@ -103,6 +105,17 @@ namespace Application.Authentication
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private static List<ClaimDto> GenerateClaims(User user)
+        {
+            var claims = new List<ClaimDto>
+            {
+                new(nameof(user.Email), user.Email),
+                new("Name", user.UserName)
+            };
+
+            return claims;
         }
 
         public void Logout(string userName)
