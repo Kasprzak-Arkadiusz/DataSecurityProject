@@ -2,12 +2,10 @@
 using Application.Common.Dto;
 using Application.Entities;
 using Application.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +17,6 @@ namespace Application.Authentication
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUserRepository _userRepository;
         private readonly ILoginFailureRepository _loginFailureRepository;
-        private readonly IConfiguration _configuration;
 
         public AuthenticationService(IPasswordHasher passwordHasher,
             IUserRepository userRepository,
@@ -28,9 +25,6 @@ namespace Application.Authentication
             _passwordHasher = passwordHasher;
             _userRepository = userRepository;
             _loginFailureRepository = loginFailureRepository;
-            _configuration = new ConfigurationBuilder()
-                .AddUserSecrets(Assembly.GetExecutingAssembly())
-                .Build();
         }
 
         public async Task<Result> RegisterAsync(RegisterDto userDto)
@@ -50,7 +44,7 @@ namespace Application.Authentication
             return Result.Success();
         }
 
-        public async Task<LoginResponse> LoginAsync(LoginDto loginDto)
+        public async Task<LoginResponse> LoginAsync(LoginDto loginDto, string jwtKey)
         {
             var failureResponse = new[] { "Invalid attempt" };
 
@@ -68,7 +62,7 @@ namespace Application.Authentication
             if (!await TryLoginAsync(user, providedPassword))
                 return new LoginResponse(Result.Failure(failureResponse));
 
-            var token = GenerateJwtToken(user);
+            var token = GenerateJwtToken(user, jwtKey);
 
             var response = new LoginResponse(Result.Success())
             {
@@ -96,10 +90,10 @@ namespace Application.Authentication
             return true;
         }
 
-        private string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User user, string jwtKey)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JWT:Key"]);
+            var key = Encoding.ASCII.GetBytes(jwtKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),

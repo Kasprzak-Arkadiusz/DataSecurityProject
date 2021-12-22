@@ -1,3 +1,4 @@
+using API.Middleware;
 using Application;
 using Application.Persistence;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,8 @@ namespace API
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
+            services.AddScoped<IUserService, UserService>();
+
             services.AddApplication(Configuration);
         }
 
@@ -46,7 +49,7 @@ namespace API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

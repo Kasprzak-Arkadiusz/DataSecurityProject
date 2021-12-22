@@ -18,7 +18,7 @@ namespace API.Controllers
 
             try
             {
-                loginResult = await AuthenticationService.LoginAsync(loginDto);
+                loginResult = await AuthenticationService.LoginAsync(loginDto, Configuration["JWT:Key"]);
             }
             catch (Exception)
             {
