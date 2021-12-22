@@ -69,6 +69,15 @@ namespace UI.Controllers
             return View(loginViewModel);
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.SetString("Token", string.Empty);
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Index", "Home");
+        }
+
         public IActionResult PasswordReset()
         {
             return RedirectToAction("Index", "PasswordReset");
