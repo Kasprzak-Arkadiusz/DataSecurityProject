@@ -31,4 +31,7 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=1Secure*Password1
     volumes:
-      - /var/lib/docker/volumes/mssql_db/_data:/var/opt/data
+      - mssql_db:/var/opt/mssql
+
+volumes:
+  mssql_db: {}
