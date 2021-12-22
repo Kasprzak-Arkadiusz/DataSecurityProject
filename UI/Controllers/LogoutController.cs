@@ -6,7 +6,7 @@ namespace UI.Controllers
     {
         public IActionResult Index()
         {
-            // Calling API to logout (terminate JWT Token etc.)
+            
 
             return RedirectToAction("Index", "Home");
         }

@@ -39,6 +39,7 @@ namespace Application.Entities
 
         private void ApplyLockout()
         {
+            NumberOfFailedAttempts = 0;
             NumberOfLockoutsInARow++;
 
             if (NumberOfLockoutsInARow == Constants.MaxNumberOfLockouts)

@@ -62,6 +62,8 @@ namespace Application.Authentication
             if (!await TryLoginAsync(user, providedPassword))
                 return new LoginResponse { Result = Result.Failure(failureResponse) };
 
+            await ResetFailedAttemptsAsync(user);
+
             var token = GenerateJwtToken(user, jwtKey);
 
             var response = new LoginResponse()
@@ -72,6 +74,13 @@ namespace Application.Authentication
             };
 
             return response;
+        }
+
+        private async Task ResetFailedAttemptsAsync(User user)
+        {
+            var loginFailure = user.LoginFailure;
+            loginFailure.SuccessfulAttempt();
+            await _loginFailureRepository.UpdateLoginFailureAsync(loginFailure);
         }
 
         private async Task<bool> TryLoginAsync(User user, string providedPassword)
