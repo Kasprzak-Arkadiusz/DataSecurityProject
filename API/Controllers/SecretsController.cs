@@ -10,7 +10,7 @@ namespace API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Test()
+        public IActionResult GetAll()
         {
             return Ok();
         }

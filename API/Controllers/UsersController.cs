@@ -1,5 +1,5 @@
 ﻿using Application.Entities;
-using Application.Repositories;
+using Application.Repositories.UserRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

@@ -3,7 +3,7 @@ using Application.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace Application.Repositories
+namespace Application.Repositories.UserRepository
 {
     internal class UserRepository : IUserRepository
     {

@@ -1,10 +1,11 @@
-﻿using System;
-using Application.Authentication;
+﻿using Application.Authentication;
 using Application.Persistence;
-using Application.Repositories;
+using Application.Repositories.LoginFailureRepository;
+using Application.Repositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Application
 {

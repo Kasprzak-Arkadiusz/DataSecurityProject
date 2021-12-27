@@ -2,7 +2,7 @@
 using Application.Entities;
 using Application.Persistence;
 
-namespace Application.Repositories
+namespace Application.Repositories.LoginFailureRepository
 {
     public class LoginFailureRepository : ILoginFailureRepository
     {

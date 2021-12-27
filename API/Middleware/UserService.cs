@@ -1,5 +1,5 @@
 ﻿using Application.Common.Dto;
-using Application.Repositories;
+using Application.Repositories.UserRepository;
 using System.Threading.Tasks;
 
 namespace API.Middleware

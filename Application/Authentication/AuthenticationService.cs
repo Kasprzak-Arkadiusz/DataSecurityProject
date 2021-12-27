@@ -1,7 +1,8 @@
 ﻿using Application.Common;
 using Application.Common.Dto;
 using Application.Entities;
-using Application.Repositories;
+using Application.Repositories.LoginFailureRepository;
+using Application.Repositories.UserRepository;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;

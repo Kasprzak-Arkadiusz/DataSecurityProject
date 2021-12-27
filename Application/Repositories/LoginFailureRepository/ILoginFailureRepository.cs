@@ -1,7 +1,7 @@
-﻿using Application.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Application.Entities;
 
-namespace Application.Repositories
+namespace Application.Repositories.LoginFailureRepository
 {
     public interface ILoginFailureRepository
     {
