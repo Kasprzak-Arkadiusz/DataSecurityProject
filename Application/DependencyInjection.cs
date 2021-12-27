@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Application.Repositories.SecretRepository;
 
 namespace Application
 {
@@ -28,6 +29,7 @@ namespace Application
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ILoginFailureRepository, LoginFailureRepository>();
+            services.AddTransient<ISecretRepository, SecretRepository>();
 
             services.AddTransient<IPasswordHasher, PasswordHasher>();
             services.AddTransient<ISecretPasswordHasher, SecretPasswordHasher>();

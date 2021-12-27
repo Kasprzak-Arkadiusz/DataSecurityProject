@@ -20,8 +20,4 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Authorization\" />
-  </ItemGroup>
-
 </Project>

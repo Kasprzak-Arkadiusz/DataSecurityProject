@@ -8,6 +8,5 @@ namespace Application.Authentication
     {
         public Task<Result> RegisterAsync(RegisterDto user);
         public Task<LoginResponse> LoginAsync(LoginDto login, string jwtKey);
-        public void Logout(string userName);
     }
 }

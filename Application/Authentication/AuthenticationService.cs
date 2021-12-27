@@ -127,10 +127,5 @@ namespace Application.Authentication
 
             return claims;
         }
-
-        public void Logout(string userName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
