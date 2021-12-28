@@ -1,5 +1,5 @@
-﻿using Application.Common.Dto;
-using Application.Repositories.UserRepository;
+﻿using ApiLibrary.Repositories.UserRepository;
+using CommonLibrary.Dto;
 using System.Threading.Tasks;
 
 namespace API.Middleware
@@ -16,7 +16,12 @@ namespace API.Middleware
         public async Task<UserDto> GetById(int id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-            var userDto = new UserDto(user);
+            var userDto = new UserDto
+            {
+                Email = user.Email,
+                Id = user.Id,
+                UserName = user.UserName
+            };
 
             return userDto;
         }

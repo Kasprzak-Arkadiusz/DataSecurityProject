@@ -1,8 +1,8 @@
-﻿using Application.Common.Dto;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using CommonLibrary.Dto;
 
 namespace API.Controllers
 {
@@ -20,7 +20,7 @@ namespace API.Controllers
                 if (loginResponse.Result.Succeeded)
                     return Ok(loginResponse);
 
-                await Task.Delay(3000); // Slow down hacking attempt
+                await Task.Delay(TimeSpan.FromSeconds(3)); // Slow down hacking attempt
                 return BadRequest(loginResponse);
             }
             catch (Exception)

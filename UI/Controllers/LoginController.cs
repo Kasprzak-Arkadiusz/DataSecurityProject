@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using CommonLibrary.Common;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Models;
-using UI.Utils;
 
 namespace UI.Controllers
 {
@@ -44,6 +45,9 @@ namespace UI.Controllers
                 HttpContext.Session.SetString("Token", result?.Token);
 
                 var claims = result?.Claims.Select(c => new Claim(c.Type, c.Value)).ToList();
+
+                var user = new GenericPrincipal(new ClaimsIdentity(claims?.First(c => c.Type == "Name").Value), new[] { "User" });
+                HttpContext.User = user;
 
                 var claimsIdentity = new ClaimsIdentity(
                     claims, CookieAuthenticationDefaults.AuthenticationScheme);

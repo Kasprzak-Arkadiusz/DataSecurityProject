@@ -1,12 +1,53 @@
-﻿form, label, input, span, h3, h4 {
+﻿form, label, input, span, h3, h4, a {
     text-align: center;
 }
 
-#registerForm, #loginForm {
-    max-width: 360px;
+div.centered-form {
+    width: 360px;
     text-align: center;
 }
 
 div.alert-danger {
     text-align: center;
+}
+
+#loginButton, #createButton, #showCreatedPasswordBtn {
+    margin: 5px;
+}
+
+footer {
+    text-align: center;
+}
+
+/*Secrets page*/
+
+#backToSecrets {
+    text-align: center;
+}
+
+#createSecret {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.secrets-label {
+    font-weight: bold;
+    width: 100%;
+}
+
+.password-input {
+    width: 280px;
+}
+
+hr.high {
+    margin-bottom: 5rem;
+}
+
+div.narrow-container {
+    max-width: 720px;
+    margin: auto;
+}
+
+div.hidden {
+    visibility: hidden;
 }

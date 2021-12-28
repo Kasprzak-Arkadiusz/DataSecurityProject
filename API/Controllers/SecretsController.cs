@@ -1,15 +1,17 @@
-﻿using API.Middleware;
-using Application.Authentication;
-using Application.Common.Dto;
-using Application.Repositories.SecretRepository;
-using Application.Repositories.UserRepository;
+﻿using System;
+using API.Middleware;
+using ApiLibrary.Authentication;
+using ApiLibrary.Repositories.SecretRepository;
+using ApiLibrary.Repositories.UserRepository;
+using CommonLibrary.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Application.Entities;
+using Secret = ApiLibrary.Entities.Secret;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class SecretsController : BaseApiController
     {
         private readonly ISecretRepository _secretRepository;
@@ -29,28 +31,33 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetServiceNames([FromBody] string userName)
+        public async Task<IActionResult> GetServiceNames(string userName)
         {
             var serviceNames = await _secretRepository.GetUserServiceNamesAsync(userName);
             return Ok(serviceNames);
         }
 
         [HttpGet("Password")]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetPassword([FromBody] string masterPassword, [FromBody] string serviceName,
-            [FromBody] string userName)
+        public async Task<IActionResult> GetPassword(string masterPassword, string serviceName, string userName)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
+
+            if (user is null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                return BadRequest();
+            }
+
             var result = _passwordHasher.VerifyHashedPassword(user.MasterPassword, masterPassword);
 
             if (!result)
             {
+                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
@@ -61,7 +68,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -71,10 +77,12 @@ namespace API.Controllers
                 return BadRequest();
 
             var user = await _userRepository.GetUserByNameAsync(secretDto.UserName);
+            var (encryptedPassword, iv) = _secretHasher.EncryptPassword(secretDto.Password);
 
             var secret = new Secret
             {
-                Password = secretDto.Password,
+                Password = encryptedPassword,
+                Iv = iv,
                 ServiceName = secretDto.ServiceName,
                 User = user
             };

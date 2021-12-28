@@ -1,4 +1,4 @@
-﻿using Application.Authentication;
+﻿using ApiLibrary.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +11,7 @@ namespace API.Controllers
     {
         // All services will be added here
         private IAuthenticationService _authenticationService;
+
         private IConfiguration _configuration;
 
         protected IAuthenticationService AuthenticationService =>

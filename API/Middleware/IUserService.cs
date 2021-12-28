@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Application.Common.Dto;
+﻿using CommonLibrary.Dto;
+using System.Threading.Tasks;
 
 namespace API.Middleware
 {
