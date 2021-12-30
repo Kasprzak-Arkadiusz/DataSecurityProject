@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CommonLibrary.Common;
+using CommonLibrary.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using CommonLibrary.Dto;
 
 namespace API.Controllers
 {
@@ -25,7 +26,8 @@ namespace API.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Unexpected error");
+                var loginResponse = new LoginResponse { Result = Result.Failure(new[] { "Unexpected error" }) };
+                return BadRequest(loginResponse);
             }
         }
     }

@@ -86,7 +86,7 @@ namespace UI.Controllers
             if (httpResponseMessage.IsSuccessStatusCode)
                 return RedirectToAction("Index");
 
-            viewModel.Error = "Unexpected error";
+            ViewData["Error"] = "Unexpected error";
             return View(viewModel);
         }
     }

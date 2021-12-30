@@ -6,10 +6,10 @@
     <hr/>
 
     <div>
-        @if (Model is not null && !string.IsNullOrEmpty(Model.Error))
+        @if (!string.IsNullOrEmpty((string)ViewData["Error"]))
         {
             <div class="alert-danger alert w-100">
-                @Model.Error
+                @ViewData["Error"]
             </div>
         }
         <div class="container-fluid centered-form" id="loginForm">

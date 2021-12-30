@@ -10,7 +10,7 @@ namespace UI.Models
         [DisplayName("User name")]
         [StringLength(32, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [RegularExpression(@"^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$",
-            ErrorMessage = "User name can only contain alphanumeric, '.' and '_' and also '.' and '_' cannot be next to each other" )]
+            ErrorMessage = "User name can only contain alphanumeric, '.' and '_' and also '.' and '_' cannot be next to each other")]
         public string UserName { get; set; }
 
         [Required]
@@ -44,7 +44,5 @@ namespace UI.Models
         [DataType(DataType.Password)]
         [Compare(nameof(MasterPassword), ErrorMessage = "The master password and master confirmation password do not match.")]
         public string ConfirmMasterPassword { get; set; }
-
-        public string Error { get; set; }
     }
 }

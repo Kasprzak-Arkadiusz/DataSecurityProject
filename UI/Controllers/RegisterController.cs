@@ -34,7 +34,7 @@ namespace UI.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            registerViewModel.Error = await httpResponseMessage.Content.ReadAsStringAsync();
+            ViewData["Error"] = await httpResponseMessage.Content.ReadAsStringAsync();
 
             return View(registerViewModel);
         }

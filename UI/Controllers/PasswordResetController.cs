@@ -34,13 +34,11 @@ namespace UI.Controllers
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                ViewData["Error"] = "Invalid email address";
-                return View(viewModel);
+                return RedirectToAction("EmailSend");
             }
-                
 
             var token = await httpResponseMessage.Content.ReadAsStringAsync();
-            return RedirectToAction("EmailSend", new {token = token});
+            return RedirectToAction("EmailSend", new { token });
         }
 
         public IActionResult EmailSend(string token)

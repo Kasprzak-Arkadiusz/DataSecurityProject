@@ -68,7 +68,8 @@ namespace UI.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            loginViewModel.Error = result?.Result.Errors[0];
+            if (result != null) 
+                ViewData["Error"] = string.Join("\n", result.Result.Errors);
 
             return View(loginViewModel);
         }

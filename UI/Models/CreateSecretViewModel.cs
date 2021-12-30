@@ -10,7 +10,5 @@ namespace UI.Models
 
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        public string Error { get; set; }
     }
 }
