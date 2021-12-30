@@ -52,9 +52,9 @@ namespace API
             app.UseRouting();
 
             app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+                .WithMethods()
+                .AllowAnyHeader()
+                .WithOrigins("https://localhost:5000"));
 
             app.UseMiddleware<JwtMiddleware>();
 

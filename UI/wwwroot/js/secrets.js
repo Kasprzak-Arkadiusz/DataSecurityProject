@@ -23,10 +23,6 @@ async function showPassword(id) {
 }
 
 async function sendRequest(id) {
-    debugger;
-    console.log(id);
-    console.log(document.getElementById(`masterPassword${id}`).textContent);
-    console.log(document.getElementById("UserName").value);
     const params = new URLSearchParams({
         masterPassword: `${document.getElementById(`masterPassword${id}`).value}`,
         serviceName: `${document.getElementById(`serviceName${id}`).textContent}`,
@@ -44,15 +40,12 @@ async function sendRequest(id) {
         console.log(error);
     });
 
-    console.log(response);
-
     if (!response.ok) {
         alert("Invalid password");
         return;
     }
 
     const data = await response.json();
-    console.log(data);
 
     await displayPassword(data, id);
 }
