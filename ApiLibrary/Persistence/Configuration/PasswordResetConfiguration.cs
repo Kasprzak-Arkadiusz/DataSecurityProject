@@ -8,7 +8,7 @@ namespace ApiLibrary.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<PasswordReset> builder)
         {
-            builder.Property(p => p.ResetToken).HasMaxLength(128).IsRequired();
+            builder.Property(p => p.ResetToken).HasMaxLength(256).IsRequired();
             builder.Property(p => p.ValidTo).IsRequired();
         }
     }

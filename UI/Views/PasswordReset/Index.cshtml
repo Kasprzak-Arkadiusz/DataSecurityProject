@@ -1,7 +1,28 @@
-﻿
+﻿@model PasswordResetViewModel
+
 <div class="narrow-container">
     <h3>Password reset</h3>
+    <hr/>
+    
+    @if (!string.IsNullOrEmpty((string)ViewData["Error"]))
+    {
+        <div class="alert-danger alert w-100">
+            @ViewData["Error"]
+        </div>
+    }
+
+    <div class="container-fluid centered-form">
+        <form method="post">
+            <div class="form-group">
+            <label asp-for="EmailAddress"></label>
+            <input asp-for="EmailAddress" class="form-control"/>
+            <span asp-validation-for="EmailAddress" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Send email</button>
+        </form>
+    </div>
 </div>
 
-@{
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

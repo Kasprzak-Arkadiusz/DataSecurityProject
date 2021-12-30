@@ -2,8 +2,10 @@
 using ApiLibrary.Authentication;
 using ApiLibrary.Persistence;
 using ApiLibrary.Repositories.LoginFailureRepository;
+using ApiLibrary.Repositories.PasswordResetRepository;
 using ApiLibrary.Repositories.SecretRepository;
 using ApiLibrary.Repositories.UserRepository;
+using ApiLibrary.UserPasswordReset;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,16 +27,22 @@ namespace ApiLibrary
                     }
                 ));
 
+            services.AddDataProtection();
+
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ILoginFailureRepository, LoginFailureRepository>();
             services.AddTransient<ISecretRepository, SecretRepository>();
+            services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
 
             services.AddTransient<IPasswordHasher, PasswordHasher>();
             services.AddTransient<ISecretPasswordHasher, SecretPasswordHasher>();
 
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+
+            // TODO Validate
+            services.AddSingleton<ITokenProvider, TokenProvider>();
 
             return services;
         }

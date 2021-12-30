@@ -1,4 +1,4 @@
-﻿form, label, input, span, h3, h4, a {
+﻿form, label, input, span, h3, h4, a, p {
     text-align: center;
 }
 
@@ -46,6 +46,8 @@ hr.high {
 div.narrow-container {
     max-width: 720px;
     margin: auto;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 div.hidden {
