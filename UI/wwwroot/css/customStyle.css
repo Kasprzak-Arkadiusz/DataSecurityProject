@@ -53,3 +53,11 @@ div.narrow-container {
 div.hidden {
     visibility: hidden;
 }
+
+#lastConnectionRow {
+    justify-content: center;
+}
+
+.separation {
+    margin: 5px !important;
+}

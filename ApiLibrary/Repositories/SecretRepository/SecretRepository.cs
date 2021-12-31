@@ -18,7 +18,6 @@ namespace ApiLibrary.Repositories.SecretRepository
 
         public async Task<IEnumerable<string>> GetUserServiceNamesAsync(string userName)
         {
-            // Maybe include is needed?
             var serviceNames = await _context.Secrets.Where(s => s.User.UserName == userName)
                 .Select(s => s.ServiceName).ToListAsync();
             return serviceNames;

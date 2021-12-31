@@ -1,23 +1,37 @@
 ﻿using CommonLibrary.Common;
+using CommonLibrary.Dto;
+using IpInfo;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Models;
+using Wangkanai.Detection.Services;
 
 namespace UI.Controllers
 {
     public class LoginController : BaseController
     {
+        private readonly IDetectionService _detectionService;
+        private readonly IConfiguration _configuration;
+
+        public LoginController(IDetectionService detectionService, IConfiguration configuration)
+        {
+            _detectionService = detectionService;
+            _configuration = configuration;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -42,36 +56,62 @@ namespace UI.Controllers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                HttpContext.Session.SetString("Token", result?.Token);
+                await LoginUserAsync(result);
 
-                var claims = result?.Claims.Select(c => new Claim(c.Type, c.Value)).ToList();
+                using var ipInfoClient = new HttpClient();
+                var api = new IpInfoApi(_configuration["IpInfoToken"], ipInfoClient);
+                var response = await api.GetCurrentInformationAsync();
 
-                var user = new GenericPrincipal(new ClaimsIdentity(claims?.First(c => c.Type == "Name").Value), new[] { "User" });
-                HttpContext.User = user;
-
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
+                var lastConnectionViewModel = new LastConnectionDto
                 {
-                    AllowRefresh = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
-                    IsPersistent = false,
-                    IssuedUtc = DateTimeOffset.Now
+                    DeviceType = _detectionService.Device.Type.ToString(),
+                    BrowserName = _detectionService.Browser.Name.ToString(),
+                    PlatformName = _detectionService.Platform.Name.ToString(),
+                    City = response.City,
+                    Region = response.Region,
+                    Country = response.Country,
+                    ConnectionTime = DateTime.Now,
+                    UserName = loginViewModel.UserName
                 };
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
+                const string createActionPath = "LastConnection";
+                var token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var createJson = JsonConvert.SerializeObject(lastConnectionViewModel);
+                var createContent = new StringContent(createJson, Encoding.UTF8, "Application/json");
+                await client.PostAsync(createActionPath, createContent);
 
                 return RedirectToAction("Index", "Home");
             }
 
-            if (result != null) 
+            if (result != null)
                 ViewData["Error"] = string.Join("\n", result.Result.Errors);
 
             return View(loginViewModel);
+        }
+
+        private async Task LoginUserAsync(LoginResponse result)
+        {
+            HttpContext.Session.SetString("Token", result?.Token);
+
+            var claims = result?.Claims.Select(c => new Claim(c.Type, c.Value)).ToList();
+            var user = new GenericPrincipal(new ClaimsIdentity(claims?.First(c => c.Type == "Name").Value), new[] { "User" });
+            HttpContext.User = user;
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+                IsPersistent = false,
+                IssuedUtc = DateTimeOffset.Now
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
         }
 
         public async Task<IActionResult> Logout()

@@ -8,8 +8,12 @@ namespace ApiLibrary.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<LastConnection> builder)
         {
-            builder.Property(l => l.DeviceDetails).HasMaxLength(128);
-            builder.Property(l => l.Location).HasMaxLength(128);
+            builder.Property(l => l.DeviceType).HasMaxLength(32);
+            builder.Property(l => l.BrowserName).HasMaxLength(32);
+            builder.Property(l => l.PlatformName).HasMaxLength(32);
+            builder.Property(l => l.City).HasMaxLength(64);
+            builder.Property(l => l.Region).HasMaxLength(64);
+            builder.Property(l => l.Country).HasMaxLength(64);
         }
     }
 }

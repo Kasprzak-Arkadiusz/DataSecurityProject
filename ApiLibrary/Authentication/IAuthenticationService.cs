@@ -1,4 +1,5 @@
-﻿using CommonLibrary.Common;
+﻿using ApiLibrary.Entities;
+using CommonLibrary.Common;
 using CommonLibrary.Dto;
 using System.Threading.Tasks;
 
@@ -9,5 +10,7 @@ namespace ApiLibrary.Authentication
         public Task<Result> RegisterAsync(RegisterDto user);
 
         public Task<LoginResponse> LoginAsync(LoginDto login, string jwtKey);
+
+        public Task ResetFailedAttemptsAsync(User user);
     }
 }

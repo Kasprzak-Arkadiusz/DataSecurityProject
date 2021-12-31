@@ -5,7 +5,7 @@ namespace ApiLibrary.Repositories.LoginFailureRepository
 {
     public interface ILoginFailureRepository
     {
-        public Task<LoginFailure> GetLoginFailureByIdAsync(int id);
+        public Task<LoginFailure> GetLoginFailureByUserIdAsync(int userId);
 
         public Task<LoginFailure> CreateLoginFailureAsync(LoginFailure loginFailure);
 

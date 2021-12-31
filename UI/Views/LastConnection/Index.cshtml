@@ -1,15 +1,65 @@
-﻿@model Wangkanai.Detection.Services.IDetectionService
+﻿@model IEnumerable<LastConnectionViewModel>
 
 <div class="narrow-container">
     <h3>Last connections</h3>
-    <hr class="high"/>
 
     <div class="container-fluid">
-        <ul>
-            <li>@Model.Device.Type</li>
-            <li>@Model.Browser.Name</li>
-            <li>@Model.Platform.Name</li>
-            <li>@Model.Engine.Name</li>
-        </ul>
+        @foreach (var item in Model)
+        {
+            <hr/>
+            <div class="container-fluid centered-form">
+                <div class="row" id="lastConnectionRow">
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.DeviceType)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.DeviceType)
+                    </div>
+                    <div class="w-100"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.BrowserName)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.BrowserName)
+                    </div>
+                    <div class="w-100"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.PlatformName)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.PlatformName)
+                    </div>
+                    <div class="w-100 separation"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.City)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.City)
+                    </div>
+                    <div class="w-100"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.Region)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.Region)
+                    </div>
+                    <div class="w-100"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.Country)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.Country)
+                    </div>
+                    <div class="w-100 separation"></div>
+                    <b class="col-sm-4">
+                        @Html.DisplayNameFor(_ => item.ConnectionTime)
+                    </b>
+                    <div class="col-sm-4">
+                        @Html.DisplayFor(_ => item.ConnectionTime)
+                    </div>
+                    <div class="w-100"></div>
+                </div>
+            </div>
+        }
     </div>
 </div>

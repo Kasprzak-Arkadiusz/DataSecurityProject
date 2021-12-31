@@ -1,20 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
 
-namespace UI.Models
+namespace CommonLibrary.Dto
 {
-    public class LastConnectionViewModel
+    public class LastConnectionDto
     {
-        [DisplayName("Device type")]
         public string DeviceType { get; set; }
-        [DisplayName("Browser name")]
         public string BrowserName { get; set; }
-        [DisplayName("OS name")]
         public string PlatformName { get; set; }
         public string City { get; set; }
         public string Region { get; set; }
         public string Country { get; set; }
-        [DisplayName("Connection time")]
         public DateTime ConnectionTime { get; set; }
+        public string UserName { get; set; }
     }
 }

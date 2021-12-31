@@ -78,9 +78,9 @@ namespace ApiLibrary.Authentication
             return response;
         }
 
-        private async Task ResetFailedAttemptsAsync(User user)
+        public async Task ResetFailedAttemptsAsync(User user)
         {
-            var loginFailure = user.LoginFailure;
+            var loginFailure = await _loginFailureRepository.GetLoginFailureByUserIdAsync(user.Id);
             loginFailure.SuccessfulAttempt();
             await _loginFailureRepository.UpdateLoginFailureAsync(loginFailure);
         }

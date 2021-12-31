@@ -1,6 +1,7 @@
 ﻿using System;
 using ApiLibrary.Authentication;
 using ApiLibrary.Persistence;
+using ApiLibrary.Repositories.LastConnectionRepository;
 using ApiLibrary.Repositories.LoginFailureRepository;
 using ApiLibrary.Repositories.PasswordResetRepository;
 using ApiLibrary.Repositories.SecretRepository;
@@ -35,6 +36,7 @@ namespace ApiLibrary
             services.AddTransient<ILoginFailureRepository, LoginFailureRepository>();
             services.AddTransient<ISecretRepository, SecretRepository>();
             services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
+            services.AddTransient<ILastConnectionRepository, LastConnectionRepository>();
 
             services.AddTransient<IPasswordHasher, PasswordHasher>();
             services.AddTransient<ISecretPasswordHasher, SecretPasswordHasher>();

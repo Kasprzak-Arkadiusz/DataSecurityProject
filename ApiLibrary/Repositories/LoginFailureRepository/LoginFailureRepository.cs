@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using ApiLibrary.Entities;
 using ApiLibrary.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiLibrary.Repositories.LoginFailureRepository
 {
@@ -12,9 +14,10 @@ namespace ApiLibrary.Repositories.LoginFailureRepository
             _context = context;
         }
 
-        public async Task<LoginFailure> GetLoginFailureByIdAsync(int id)
+        public async Task<LoginFailure> GetLoginFailureByUserIdAsync(int userId)
         {
-           var loginFailure = await _context.LoginFailures.FindAsync(id);
+            var loginFailure = await _context.LoginFailures.Include(l => l.User)
+                .Where(l => l.User.Id == userId).FirstOrDefaultAsync();
            return loginFailure;
         }
 

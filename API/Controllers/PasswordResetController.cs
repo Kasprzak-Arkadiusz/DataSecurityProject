@@ -18,16 +18,19 @@ namespace API.Controllers
         private readonly IPasswordResetRepository _passwordResetRepository;
         private readonly ITokenProvider _tokenProvider;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IAuthenticationService _authenticationService;
 
         public PasswordResetController(IUserRepository userRepository,
             IPasswordResetRepository passwordResetRepository,
             ITokenProvider tokenProvider,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher, 
+            IAuthenticationService authenticationService)
         {
             _userRepository = userRepository;
             _passwordResetRepository = passwordResetRepository;
             _tokenProvider = tokenProvider;
             _passwordHasher = passwordHasher;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet]
@@ -63,6 +66,9 @@ namespace API.Controllers
 
         private async Task DeleteIfExpired(PasswordReset passwordReset)
         {
+            if (passwordReset is null)
+                return;
+            
             if (passwordReset.ValidTo < DateTime.Now)
             {
                await _passwordResetRepository.DeleteById(passwordReset.Id);
@@ -101,6 +107,9 @@ namespace API.Controllers
                 await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
+
+            // Unlock user account
+            await _authenticationService.ResetFailedAttemptsAsync(user);
 
             var encodedNewPassword = _passwordHasher.HashPassword(dto.Password);
             user.Password = encodedNewPassword;
