@@ -16,9 +16,10 @@ namespace ApiLibrary.Repositories.PasswordResetRepository
             _context = context;
         }
 
-        public async Task<PasswordReset> GetPasswordResetById(int id)
+        public async Task<PasswordReset> GetByUserId(int userId)
         {
-            var passwordReset = await _context.PasswordResets.FindAsync(id);
+            var passwordReset = await _context.PasswordResets.Include(p => p.User)
+                .Where(p => p.User.Id == userId).FirstOrDefaultAsync();
             return passwordReset;
         }
 
@@ -28,10 +29,9 @@ namespace ApiLibrary.Repositories.PasswordResetRepository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByUserId(int userId)
+        public async Task DeleteById(int id)
         {
-            var passwordReset = await _context.PasswordResets.Include(p => p.User)
-                .Where(p => p.User.Id == userId).FirstOrDefaultAsync();
+            var passwordReset = await _context.PasswordResets.FindAsync(id);
             _context.PasswordResets.Remove(passwordReset);
             await _context.SaveChangesAsync();
         }

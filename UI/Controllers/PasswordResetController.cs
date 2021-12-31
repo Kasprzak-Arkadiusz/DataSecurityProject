@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using CommonLibrary.Dto;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using CommonLibrary.Dto;
 using UI.Models;
 
 namespace UI.Controllers
@@ -15,9 +16,9 @@ namespace UI.Controllers
     {
         private readonly IDataProtector _protector;
 
-        public PasswordResetController(IDataProtectionProvider provider)
+        public PasswordResetController(IConfiguration configuration, IDataProtectionProvider provider)
         {
-            _protector = provider.CreateProtector("PasswordReset");
+            _protector = provider.CreateProtector(configuration["PurposeForPasswordResetControllerProtector"]);
         }
 
         public IActionResult Index()
@@ -43,24 +44,19 @@ namespace UI.Controllers
             var url = uriBuilder.ToString();
 
             var httpResponseMessage = await client.GetAsync(url);
-
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("SendEmail");
             }
 
             var token = await httpResponseMessage.Content.ReadAsStringAsync();
-            return RedirectToAction("SendEmail", new
-            {
-                token = _protector.Protect(token), 
-                email = _protector.Protect(viewModel.EmailAddress)
-            });
+            return RedirectToAction("SendEmail", new { token = _protector.Protect(token) });
         }
 
-        public IActionResult SendEmail(string token, string email)
+        public IActionResult SendEmail(string token)
         {
             var callbackUrl = Url.Action("ChangePassword",
-                values: new { token, email },
+                values: new { token },
                 protocol: Request.Scheme,
                 controller: "PasswordReset");
 
@@ -68,15 +64,11 @@ namespace UI.Controllers
             return View();
         }
 
-        public IActionResult ChangePassword(string token, string email)
+        public IActionResult ChangePassword(string token)
         {
-            var unprotectedToken = _protector.Unprotect(token);
-            var unprotectedEmail = _protector.Unprotect(email);
-
             var viewModel = new PasswordChangeViewModel
             {
-                Code = unprotectedToken,
-                Email = unprotectedEmail
+                Code = _protector.Unprotect(token)
             };
 
             return View(viewModel);
@@ -85,6 +77,11 @@ namespace UI.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var client = HttpClientFactory.CreateClient("api");
             var actionPath = GetControllerName();
 
@@ -102,7 +99,6 @@ namespace UI.Controllers
                 ViewData["Error"] = "Invalid reset token";
                 return View();
             }
-                
 
             var updatePasswordDto = new UpdatePasswordDto
             {

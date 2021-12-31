@@ -1,19 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using ApiLibrary.Common;
 using ApiLibrary.Entities;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiLibrary.UserPasswordReset
 {
     public class TokenProvider : ITokenProvider
     {
+        private readonly IConfiguration _configuration;
         private readonly IDataProtector _protector;
 
         public TokenProvider(IDataProtectionProvider provider)
         {
-            _protector = provider.CreateProtector("ResetToken");
+            _configuration = new ConfigurationBuilder()
+                .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .Build();
+            _protector = provider.CreateProtector(_configuration["PurposeForTokenProviderProtector"]);
         }
 
         public async Task<string> GenerateAsync(User user)

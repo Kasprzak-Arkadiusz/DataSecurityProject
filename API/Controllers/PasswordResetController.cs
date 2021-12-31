@@ -42,18 +42,31 @@ namespace API.Controllers
                 return BadRequest();
             }
 
-            var token = await _tokenProvider.GenerateAsync(user);
+            var passwordReset = await _passwordResetRepository.GetByUserId(user.Id);
+            await DeleteIfExpired(passwordReset);
 
-            var passwordReset = new PasswordReset
+            if (passwordReset is not null)
+                return Ok(passwordReset.ResetToken);
+
+            var token = await _tokenProvider.GenerateAsync(user);
+            passwordReset = new PasswordReset
             {
                 ResetToken = token,
                 ValidTo = DateTime.Now + TimeSpan.FromMinutes(Constants.ResetPasswordExpirationTimeInMinutes),
                 User = user
             };
 
-            //await _passwordResetRepository.CreatePasswordReset(passwordReset);
+            await _passwordResetRepository.CreatePasswordReset(passwordReset);
 
             return Ok(token);
+        }
+
+        private async Task DeleteIfExpired(PasswordReset passwordReset)
+        {
+            if (passwordReset.ValidTo < DateTime.Now)
+            {
+               await _passwordResetRepository.DeleteById(passwordReset.Id);
+            }
         }
 
         [HttpGet("Validate")]
@@ -64,16 +77,17 @@ namespace API.Controllers
             var user = await _userRepository.GetUserByEmailAsync(emailAddress);
             if (user is null)
             {
+                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
             var result = _tokenProvider.Validate(user, token);
-            if (!result)
-            {
-                return BadRequest();
-            }
+            if (result) 
+                return Ok(true);
 
-            return Ok(true);
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            return BadRequest();
+
         }
 
         [HttpPost]
@@ -84,13 +98,16 @@ namespace API.Controllers
             var user = await _userRepository.GetUserByEmailAsync(dto.Email);
             if (user is null)
             {
+                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
             var encodedNewPassword = _passwordHasher.HashPassword(dto.Password);
             user.Password = encodedNewPassword;
             await _userRepository.UpdateUserAsync(user);
-            await _passwordResetRepository.DeleteByUserId(user.Id);
+
+            var passwordReset = await _passwordResetRepository.GetByUserId(user.Id);
+            await _passwordResetRepository.DeleteById(passwordReset.Id);
 
             return Ok();
         }
