@@ -41,7 +41,6 @@ namespace ApiLibrary
 
             services.AddTransient<IAuthenticationService, AuthenticationService>();
 
-            // TODO Validate
             services.AddSingleton<ITokenProvider, TokenProvider>();
 
             return services;

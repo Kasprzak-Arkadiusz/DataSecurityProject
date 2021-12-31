@@ -55,6 +55,8 @@ namespace UI
                     };
                 });
 
+            services.AddDataProtection();
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);

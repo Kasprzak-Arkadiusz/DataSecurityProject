@@ -1,7 +1,9 @@
 ﻿using ApiLibrary.Entities;
 using ApiLibrary.Persistence;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiLibrary.Repositories.PasswordResetRepository
 {
@@ -22,16 +24,16 @@ namespace ApiLibrary.Repositories.PasswordResetRepository
 
         public async Task CreatePasswordReset(PasswordReset passwordReset)
         {
-            try
-            {
-                await _context.PasswordResets.AddAsync(passwordReset);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            await _context.PasswordResets.AddAsync(passwordReset);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteByUserId(int userId)
+        {
+            var passwordReset = await _context.PasswordResets.Include(p => p.User)
+                .Where(p => p.User.Id == userId).FirstOrDefaultAsync();
+            _context.PasswordResets.Remove(passwordReset);
+            await _context.SaveChangesAsync();
         }
     }
 }

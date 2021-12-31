@@ -7,5 +7,6 @@ namespace ApiLibrary.Repositories.PasswordResetRepository
     {
         public Task<PasswordReset> GetPasswordResetById(int id);
         public Task CreatePasswordReset(PasswordReset passwordReset);
+        public Task DeleteByUserId(int userId);
     }
 }
