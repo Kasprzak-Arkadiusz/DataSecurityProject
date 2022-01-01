@@ -15,6 +15,7 @@ namespace UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(RegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)

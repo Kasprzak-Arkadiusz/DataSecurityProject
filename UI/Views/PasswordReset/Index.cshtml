@@ -6,12 +6,13 @@
 
     <div class="container-fluid centered-form">
         <form method="post">
+            @Html.AntiForgeryToken()
             <div class="form-group">
-            <label asp-for="EmailAddress"></label>
-            <input asp-for="EmailAddress" class="form-control"/>
-            <span asp-validation-for="EmailAddress" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Send email</button>
+                <label asp-for="EmailAddress"></label>
+                <input asp-for="EmailAddress" class="form-control"/>
+                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Send email</button>
         </form>
     </div>
 </div>

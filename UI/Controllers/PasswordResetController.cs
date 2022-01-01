@@ -27,6 +27,7 @@ namespace UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(PasswordResetViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -75,6 +76,7 @@ namespace UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel viewModel)
         {
             if (!ModelState.IsValid)

@@ -15,6 +15,7 @@
             <h3>Create a new account.</h3>
             <hr/>
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label asp-for="UserName"></label>
                     <input asp-for="UserName" class="form-control"/>

@@ -60,7 +60,8 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateSecretViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateSecretViewModel viewModel, string antiForgeryFieldName)
         {
             if (!ModelState.IsValid)
             {
