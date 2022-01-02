@@ -1,13 +1,15 @@
-﻿async function showPasswordWhenCreating() {
-    const createdPassword = document.getElementById("createdPassword");
-    const createButton = document.getElementById("createButton");
-    if (createdPassword.type === "password") {
-        createdPassword.type = "text";
-        createButton.textContent = "Hide password";
-    } else {
-        createdPassword.type = "password";
-        createButton.textContent = "Show password";
-    }
+﻿window.onload = function() {
+    var elements = document.querySelectorAll("button");
+    const doSth = function() {
+        [].map.call(elements, function(elem) { elem.classList.remove("active") });
+        this.classList.add("active");
+    };
+    [].map.call(elements, function(elem) {
+        elem.addEventListener("click", function() {
+            const id = this.parentElement.id;
+            showPassword(id);
+        });
+    });
 }
 
 async function showPassword(id) {

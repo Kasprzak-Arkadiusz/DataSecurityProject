@@ -101,6 +101,15 @@ namespace UI
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("Content-Security-Policy", 
+                    "default-src 'self';" +
+                    " connect-src https://api/ https://localhost:5001/ 'self'");
+
+                await next();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
