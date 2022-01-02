@@ -9,15 +9,6 @@ namespace ApiLibrary.Authentication
 {
     public class SecretPasswordHasher : ISecretPasswordHasher
     {
-        private readonly IConfiguration _configuration;
-
-        public SecretPasswordHasher()
-        {
-            _configuration = new ConfigurationBuilder()
-                .AddUserSecrets(Assembly.GetExecutingAssembly())
-                .Build();
-        }
-
         public (byte[] encryptedPassword, byte[] iv) EncryptPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
@@ -29,7 +20,8 @@ namespace ApiLibrary.Authentication
             aes.Padding = PaddingMode.PKCS7;
             aes.Mode = CipherMode.CBC;
             aes.KeySize = 256;
-            aes.Key = Encoding.ASCII.GetBytes(_configuration["AES:Key"]);
+            var aesKeyString = Environment.GetEnvironmentVariable("AESKEY");
+            aes.Key = Encoding.ASCII.GetBytes(aesKeyString);
 
             var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
@@ -51,7 +43,8 @@ namespace ApiLibrary.Authentication
             aes.Padding = PaddingMode.PKCS7;
             aes.Mode = CipherMode.CBC;
             aes.KeySize = 256;
-            aes.Key = Encoding.ASCII.GetBytes(_configuration["AES:Key"]);
+            var aesKeyString = Environment.GetEnvironmentVariable("AESKEY");
+            aes.Key = Encoding.ASCII.GetBytes(aesKeyString);
 
             var decryptor = aes.CreateDecryptor(aes.Key, iv);
 

@@ -9,6 +9,8 @@ services:
       dockerfile: UI/Dockerfile
     ports:
       - "5000:443"
+    env_file:
+      - ui.env
     depends_on:
       - api
   api:
@@ -19,6 +21,8 @@ services:
       dockerfile: API/Dockerfile
     ports:
       - "5001:443"
+    env_file:
+      - api.env
     depends_on:
       - db
   db:
@@ -27,9 +31,8 @@ services:
     hostname: sql-server
     ports:
       - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=1Secure*Password1
+    env_file:
+      - db.env
     volumes:
       - mssql_db:/var/opt/mssql
 

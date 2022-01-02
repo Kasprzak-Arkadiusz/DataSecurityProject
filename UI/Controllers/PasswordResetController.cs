@@ -1,7 +1,6 @@
 ﻿using CommonLibrary.Dto;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -16,9 +15,10 @@ namespace UI.Controllers
     {
         private readonly IDataProtector _protector;
 
-        public PasswordResetController(IConfiguration configuration, IDataProtectionProvider provider)
+        public PasswordResetController(IDataProtectionProvider provider)
         {
-            _protector = provider.CreateProtector(configuration["PurposeForPasswordResetControllerProtector"]);
+            var purpose = Environment.GetEnvironmentVariable("PurposeForPasswordResetControllerProtector");
+            _protector = provider.CreateProtector(purpose);
         }
 
         public IActionResult Index()

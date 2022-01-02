@@ -13,12 +13,10 @@ namespace API.Middleware
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
 
-        public JwtMiddleware(RequestDelegate next, IConfiguration configuration)
+        public JwtMiddleware(RequestDelegate next)
         {
             _next = next;
-            _configuration = configuration;
         }
 
         public async Task Invoke(HttpContext context, IUserService userService)
@@ -31,12 +29,13 @@ namespace API.Middleware
             await _next(context);
         }
 
-        private async Task AttachUserToContext(HttpContext context, IUserService userService, string token)
+        private static async Task AttachUserToContext(HttpContext context, IUserService userService, string token)
         {
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration["JWT:Key"]);
+                var stringKey = Environment.GetEnvironmentVariable("JWTKEY");
+                var key = Encoding.ASCII.GetBytes(stringKey);
                 var tokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,

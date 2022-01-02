@@ -12,12 +12,7 @@ namespace API.Controllers
         // All services will be added here
         private IAuthenticationService _authenticationService;
 
-        private IConfiguration _configuration;
-
         protected IAuthenticationService AuthenticationService =>
             _authenticationService ??= HttpContext.RequestServices.GetService<IAuthenticationService>();
-
-        protected IConfiguration Configuration =>
-            _configuration ??= HttpContext.RequestServices.GetService<IConfiguration>();
     }
 }

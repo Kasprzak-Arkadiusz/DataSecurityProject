@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,7 +43,7 @@ namespace UI
 
             services.AddHttpClient("api", c =>
                 {
-                    c.BaseAddress = new Uri(Configuration.GetValue<string>("ApiUrl"));
+                    c.BaseAddress = new Uri(Environment.GetEnvironmentVariable("ApiUrl"));
                     c.DefaultRequestHeaders.Add(
                         HeaderNames.Accept, "*/*");
                     c.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
@@ -53,8 +52,8 @@ namespace UI
                 .ConfigurePrimaryHttpMessageHandler(() =>
                 {
                     var certificate = new X509Certificate2(
-                        Configuration["Certificate:FileLocation"],
-                        Configuration["Certificate:Password"]);
+                        Environment.GetEnvironmentVariable("CertificateFileLocation"),
+                        Environment.GetEnvironmentVariable("CertificatePassword"));
                     var certificateValidator = new SingleCertificateValidator(certificate);
 
                     return new HttpClientHandler
@@ -103,7 +102,7 @@ namespace UI
 
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.Add("Content-Security-Policy", 
+                context.Response.Headers.Add("Content-Security-Policy",
                     "default-src 'self';" +
                     " connect-src https://api/ https://localhost:5001/ 'self'");
 

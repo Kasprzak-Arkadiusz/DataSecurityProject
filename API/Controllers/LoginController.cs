@@ -16,7 +16,8 @@ namespace API.Controllers
         {
             try
             {
-                var loginResponse = await AuthenticationService.LoginAsync(loginDto, Configuration["JWT:Key"]);
+                var jwtKey = Environment.GetEnvironmentVariable("JWTKEY");
+                var loginResponse = await AuthenticationService.LoginAsync(loginDto, jwtKey);
 
                 if (loginResponse.Result.Succeeded)
                     return Ok(loginResponse);

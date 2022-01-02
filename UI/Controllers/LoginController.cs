@@ -24,12 +24,10 @@ namespace UI.Controllers
     public class LoginController : BaseController
     {
         private readonly IDetectionService _detectionService;
-        private readonly IConfiguration _configuration;
 
-        public LoginController(IDetectionService detectionService, IConfiguration configuration)
+        public LoginController(IDetectionService detectionService)
         {
             _detectionService = detectionService;
-            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -60,7 +58,8 @@ namespace UI.Controllers
                 await LoginUserAsync(result);
 
                 using var ipInfoClient = new HttpClient();
-                var api = new IpInfoApi(_configuration["IpInfoToken"], ipInfoClient);
+                var ipInfoToken = Environment.GetEnvironmentVariable("IpInfoToken");
+                var api = new IpInfoApi(ipInfoToken, ipInfoClient);
                 var response = await api.GetCurrentInformationAsync();
 
                 var lastConnectionViewModel = new LastConnectionDto
