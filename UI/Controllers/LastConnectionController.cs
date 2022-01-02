@@ -17,7 +17,6 @@ namespace UI.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            // Call to Api to retrieve last connections
             var client = HttpClientFactory.CreateClient("api");
             var token = HttpContext.Session.GetString("Token");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

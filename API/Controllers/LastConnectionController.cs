@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using API.Middleware;
+﻿using API.Middleware;
+using ApiLibrary.Common;
 using ApiLibrary.Entities;
 using ApiLibrary.Repositories.LastConnectionRepository;
 using ApiLibrary.Repositories.UserRepository;
 using CommonLibrary.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using ApiLibrary.Common;
 
 namespace API.Controllers
 {
@@ -37,7 +36,7 @@ namespace API.Controllers
                 if (user is null)
                     return BadRequest();
 
-                var lastConnections = 
+                var lastConnections =
                     await _lastConnectionRepository.GetByUserIdAsync(user.Id, Constants.NumberOfLastConnections);
 
                 var lastConnectionsDto = lastConnections.Select(i => new LastConnectionDto

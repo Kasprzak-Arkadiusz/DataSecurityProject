@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   ui:
-    container_name: webapp_container
+    container_name: ui_container
     image: ${DOCKER_REGISTRY-}ui
     build:
       context: .

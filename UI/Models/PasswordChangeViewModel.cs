@@ -22,7 +22,7 @@ namespace UI.Models
         [Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Reset token is invalid")]
         public string Code { get; set; }
     }
 }

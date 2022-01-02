@@ -47,7 +47,7 @@ namespace UI.Controllers
             var httpResponseMessage = await client.GetAsync(url);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("SendEmail");
+                return RedirectToAction("SendEmail", new { token = _protector.Protect(string.Empty)});
             }
 
             var token = await httpResponseMessage.Content.ReadAsStringAsync();

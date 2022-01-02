@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace UI.Models
 {
@@ -15,6 +16,7 @@ namespace UI.Models
         public string Region { get; set; }
         public string Country { get; set; }
         [DisplayName("Connection time")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}")]
         public DateTime ConnectionTime { get; set; }
     }
 }
