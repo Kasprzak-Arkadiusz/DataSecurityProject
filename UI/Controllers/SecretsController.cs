@@ -75,7 +75,7 @@ namespace UI.Controllers
 
             var secretDto = new SecretDto
             {
-                UserName =  ((ClaimsIdentity)User.Identity).GetCurrentUserName(),
+                UserName = ((ClaimsIdentity)User.Identity).GetCurrentUserName(),
                 Password = viewModel.Password,
                 ServiceName = viewModel.ServiceName
             };
@@ -87,7 +87,7 @@ namespace UI.Controllers
             if (httpResponseMessage.IsSuccessStatusCode)
                 return RedirectToAction("Index");
 
-            ViewData["Error"] = "Unexpected error";
+            ViewData["Error"] = "Invalid values";
             return View(viewModel);
         }
     }

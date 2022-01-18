@@ -4,11 +4,13 @@ using ApiLibrary.Entities;
 using ApiLibrary.Repositories.PasswordResetRepository;
 using ApiLibrary.Repositories.UserRepository;
 using ApiLibrary.UserPasswordReset;
+using ApiLibrary.Validators;
+using ApiLibrary.Validators.DetailedValidators;
+using CommonLibrary.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using CommonLibrary.Dto;
 
 namespace API.Controllers
 {
@@ -23,7 +25,7 @@ namespace API.Controllers
         public PasswordResetController(IUserRepository userRepository,
             IPasswordResetRepository passwordResetRepository,
             ITokenProvider tokenProvider,
-            IPasswordHasher passwordHasher, 
+            IPasswordHasher passwordHasher,
             IAuthenticationService authenticationService)
         {
             _userRepository = userRepository;
@@ -38,6 +40,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetResetPasswordToken(string emailAddress)
         {
+            if (!EmailValidator.Validate(emailAddress))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                return BadRequest();
+            }
+
             var user = await _userRepository.GetUserByEmailAsync(emailAddress);
             if (user is null)
             {
@@ -68,10 +76,10 @@ namespace API.Controllers
         {
             if (passwordReset is null)
                 return;
-            
+
             if (passwordReset.ValidTo < DateTime.Now)
             {
-               await _passwordResetRepository.DeleteById(passwordReset.Id);
+                await _passwordResetRepository.DeleteById(passwordReset.Id);
             }
         }
 
@@ -88,12 +96,11 @@ namespace API.Controllers
             }
 
             var result = _tokenProvider.Validate(user, token);
-            if (result) 
+            if (result)
                 return Ok(true);
 
             await Task.Delay(TimeSpan.FromSeconds(3));
             return BadRequest();
-
         }
 
         [HttpPost]
@@ -101,6 +108,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateUserPassword([FromBody] UpdatePasswordDto dto)
         {
+            if (!UpdatePasswordValidator.Validate(dto))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                return BadRequest();
+            }
+
             var user = await _userRepository.GetUserByEmailAsync(dto.Email);
             if (user is null)
             {

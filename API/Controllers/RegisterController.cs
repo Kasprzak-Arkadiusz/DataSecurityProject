@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using ApiLibrary.Validators.DetailedValidators;
 using CommonLibrary.Dto;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -12,14 +14,19 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterDto userDto)
         {
-            var result = await AuthenticationService.RegisterAsync(userDto);
-
-            if (!result.Succeeded)
+            if (!RegisterValidator.Validate(userDto))
             {
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 return BadRequest("Invalid attempt. Try again.");
             }
 
-            return Ok();
+            var result = await AuthenticationService.RegisterAsync(userDto);
+
+            if (result.Succeeded)
+                return Ok();
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            return BadRequest("Invalid attempt. Try again.");
         }
     }
 }

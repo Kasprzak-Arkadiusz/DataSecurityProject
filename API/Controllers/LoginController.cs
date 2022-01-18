@@ -1,4 +1,5 @@
-﻿using CommonLibrary.Common;
+﻿using ApiLibrary.Validators.DetailedValidators;
+using CommonLibrary.Common;
 using CommonLibrary.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
+            if (!LoginValidator.Validate(loginDto))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                return BadRequest("Invalid login attempt.");
+            }
+
             try
             {
                 var jwtKey = Environment.GetEnvironmentVariable("JWTKEY");
@@ -27,7 +34,7 @@ namespace API.Controllers
             }
             catch (Exception)
             {
-                var loginResponse = new LoginResponse { Result = Result.Failure(new[] { "Unexpected error" }) };
+                var loginResponse = new LoginResponse { Result = Result.Failure(new[] { "Invalid login attempt." }) };
                 return BadRequest(loginResponse);
             }
         }

@@ -103,7 +103,7 @@ namespace UI.Controllers
             var authProperties = new AuthenticationProperties
             {
                 AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(15),
                 IsPersistent = false,
                 IssuedUtc = DateTimeOffset.Now
             };

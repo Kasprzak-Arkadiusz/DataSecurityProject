@@ -7,6 +7,7 @@ using CommonLibrary.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ApiLibrary.Validators.DetailedValidators;
 using Secret = ApiLibrary.Entities.Secret;
 
 namespace API.Controllers
@@ -73,8 +74,11 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateSecret([FromBody] SecretDto secretDto)
         {
-            if (secretDto == null)
-                return BadRequest();
+            if (!SecretValidator.Validate(secretDto))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                return BadRequest("Invalid values");
+            }
 
             var user = await _userRepository.GetUserByNameAsync(secretDto.UserName);
             var (encryptedPassword, iv) = _secretHasher.EncryptPassword(secretDto.Password);

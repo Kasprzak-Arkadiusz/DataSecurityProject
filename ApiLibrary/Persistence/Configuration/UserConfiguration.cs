@@ -1,4 +1,5 @@
-﻿using ApiLibrary.Entities;
+﻿using ApiLibrary.Common;
+using ApiLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,10 +9,10 @@ namespace ApiLibrary.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Property(u => u.UserName).HasMaxLength(32).IsRequired();
+            builder.Property(u => u.UserName).HasMaxLength(Constants.MaxUsernameLength).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(50).IsRequired();
-            builder.Property(u => u.Password).HasMaxLength(128).IsRequired();
-            builder.Property(u => u.MasterPassword).HasMaxLength(128).IsRequired();
+            builder.Property(u => u.Password).HasMaxLength(Constants.MaxPasswordLength).IsRequired();
+            builder.Property(u => u.MasterPassword).HasMaxLength(Constants.MaxMasterPasswordLength).IsRequired();
             
             builder.HasOne(u => u.PasswordReset)
                 .WithOne(p => p.User)

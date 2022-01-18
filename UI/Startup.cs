@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +10,7 @@ using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using UI.Utils;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace UI
 {
@@ -38,7 +40,11 @@ namespace UI
                 {
                     options.LoginPath = "/Login/Index";
                     options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
-                    options.SlidingExpiration = true;
+                    options.SlidingExpiration = false;
+                    options.AccessDeniedPath = "/Home/Index";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
                 });
 
             services.AddHttpClient("api", c =>
