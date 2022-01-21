@@ -62,6 +62,7 @@ namespace UI.Controllers
                 var api = new IpInfoApi(ipInfoToken, ipInfoClient);
                 var response = await api.GetCurrentInformationAsync();
 
+                System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
                 var lastConnectionViewModel = new LastConnectionDto
                 {
                     DeviceType = _detectionService.Device.Type.ToString(),
