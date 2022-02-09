@@ -40,16 +40,16 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetResetPasswordToken(string emailAddress)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             if (!EmailValidator.Validate(emailAddress))
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
                 return BadRequest();
             }
 
             var user = await _userRepository.GetUserByEmailAsync(emailAddress);
             if (user is null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
@@ -88,10 +88,11 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ValidateResetPasswordToken(string emailAddress, string token)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             var user = await _userRepository.GetUserByEmailAsync(emailAddress);
             if (user is null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
@@ -99,7 +100,6 @@ namespace API.Controllers
             if (result)
                 return Ok(true);
 
-            await Task.Delay(TimeSpan.FromSeconds(3));
             return BadRequest();
         }
 
@@ -108,16 +108,16 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateUserPassword([FromBody] UpdatePasswordDto dto)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             if (!UpdatePasswordValidator.Validate(dto))
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
                 return BadRequest();
             }
 
             var user = await _userRepository.GetUserByEmailAsync(dto.Email);
             if (user is null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 

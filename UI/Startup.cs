@@ -9,6 +9,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Mvc;
 using UI.Utils;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
@@ -39,7 +40,7 @@ namespace UI
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Login/Index";
-                    options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                     options.SlidingExpiration = false;
                     options.AccessDeniedPath = "/Home/Index";
                     options.Cookie.HttpOnly = true;
@@ -78,6 +79,9 @@ namespace UI
             });
 
             services.AddControllersWithViews();
+
+            services.AddMvc(options =>
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,8 +114,10 @@ namespace UI
             {
                 context.Response.Headers.Add("Content-Security-Policy",
                     "default-src 'self';" +
-                    " connect-src https://api/ https://localhost:5001/ 'self'");
-
+                    " connect-src https://api/ https://localhost:5001/ 'self'" +
+                    " script-src 'self'" +
+                    " img-src 'self'" +
+                    " frame-src 'self'");
                 await next();
             });
 

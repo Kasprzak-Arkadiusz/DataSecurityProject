@@ -46,11 +46,11 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetPassword(string masterPassword, string serviceName, string userName)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
             var user = await _userRepository.GetUserByNameAsync(userName);
 
             if (user is null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
@@ -58,7 +58,6 @@ namespace API.Controllers
 
             if (!result)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
                 return BadRequest();
             }
 
@@ -74,9 +73,9 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateSecret([FromBody] SecretDto secretDto)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
             if (!SecretValidator.Validate(secretDto))
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
                 return BadRequest("Invalid values");
             }
 

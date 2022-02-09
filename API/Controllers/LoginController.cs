@@ -15,10 +15,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             if (!LoginValidator.Validate(loginDto))
             {
-                await Task.Delay(TimeSpan.FromSeconds(2));
-                return BadRequest("Invalid login attempt.");
+                var loginResponse = new LoginResponse { Result = Result.Failure(new[] { "Invalid login attempt." }) };
+                return BadRequest(loginResponse);
             }
 
             try

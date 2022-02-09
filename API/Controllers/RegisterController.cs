@@ -14,9 +14,11 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterDto userDto)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             if (!RegisterValidator.Validate(userDto))
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                
                 return BadRequest("Invalid attempt. Try again.");
             }
 
@@ -25,7 +27,6 @@ namespace API.Controllers
             if (result.Succeeded)
                 return Ok();
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
             return BadRequest("Invalid attempt. Try again.");
         }
     }
