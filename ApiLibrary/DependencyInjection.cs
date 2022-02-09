@@ -1,5 +1,5 @@
-﻿using System;
-using ApiLibrary.Authentication;
+﻿using ApiLibrary.Authentication;
+using ApiLibrary.Common;
 using ApiLibrary.Persistence;
 using ApiLibrary.Repositories.LastConnectionRepository;
 using ApiLibrary.Repositories.LoginFailureRepository;
@@ -10,6 +10,7 @@ using ApiLibrary.UserPasswordReset;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ApiLibrary
 {
@@ -18,7 +19,7 @@ namespace ApiLibrary
         public static IServiceCollection AddApiLibrary(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(ConnectionStringBuilder.Create(),
                     sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(

@@ -114,7 +114,7 @@ namespace UI
             {
                 context.Response.Headers.Add("Content-Security-Policy",
                     "default-src 'self';" +
-                    " connect-src https://api/ https://localhost:5001/ 'self'" +
+                    " connect-src https://api/ https://localhost:5041/ 'self'" +
                     " script-src 'self'" +
                     " img-src 'self'" +
                     " frame-src 'self'");

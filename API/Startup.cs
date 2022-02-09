@@ -54,7 +54,7 @@ namespace API
             app.UseCors(builder => builder
                 .WithMethods()
                 .AllowAnyHeader()
-                .WithOrigins("https://localhost:5000"));
+                .WithOrigins("https://localhost:5042"));
 
             app.UseMiddleware<JwtMiddleware>();
 

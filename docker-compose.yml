@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: UI/Dockerfile
     ports:
-      - "5000:443"
+      - "5042:443"
     env_file:
       - ui.env
     depends_on:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: API/Dockerfile
     ports:
-      - "5001:443"
+      - "5041:443"
     env_file:
       - api.env
     depends_on:
